@@ -1,0 +1,11 @@
+{
+    "id": "mirror_mca_sync",
+    "version": "1.0.0",
+    "name": "Mirror Mca Sync",
+    "description": "一个插件 可以支持从生存服同步当前玩家的mca 来实现快速的同步镜像服",
+    "author": "woshikedayaa",
+    "link": "https://github.com/woshikedayaa/MirrorMcaSync",
+    "dependencies": {
+       "mcdreforged": ">=2.6"
+    }
+}
