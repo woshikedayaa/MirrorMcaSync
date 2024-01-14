@@ -2,7 +2,18 @@ mms:
  error:
   config:
    file_read_error: "error when read config file,plugin will use default config"
+  sync:
+   stop_server_fail: "stop server fail! server will restart"
+
  info:
   config:
    file_not_exist: "config file not exist,plugin will create and use default config"
+  sync:
+   start: "sync will start after {} seconds,input <{} abort> to stop it"
+
+ warn:
+  sync:
+   repeat: "there are already have a sync task,input <{} abort>to stop it"
+   call_from_other: "<{} or {} abort> must call by player"
+   
   

@@ -5,7 +5,8 @@ from mcdreforged.api.types import PluginServerInterface
 default_config = {
     "from":"survival/world",
     "to":"mirror/world",
-    "command":"!!sync"
+    "command":"!!sync",
+    "waitTime":"10"
 }
 
 psi:PluginServerInterface = None
@@ -22,6 +23,7 @@ def init_config(p:PluginServerInterface):
     psi = p
     cfg = configparser.ConfigParser()
     try:
+        # 判断配置文件是否存在
         if file_exist(consts["config.path"]) == False:
             psi.logger.info(psi.tr("mms.info.config.file_not_exist"))
             # 先读取默认配置文件
@@ -36,6 +38,7 @@ def init_config(p:PluginServerInterface):
     except:
         # 遇到异常
         psi.logger.error(psi.rtr("mms.error.config.file_read_error"))
+        # 使用默认的配置
         tempc = configparser.ConfigParser()
         tempc.read_dict(default_config)
         global_config = tempc
@@ -45,3 +48,6 @@ def init_config(p:PluginServerInterface):
 
 def file_exist(path:str)->bool:
     return os.path.exists(path=path)
+
+def get(key:str)->str:
+    return global_config.get(key)
