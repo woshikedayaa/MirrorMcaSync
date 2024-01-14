@@ -4,6 +4,8 @@ from mcdreforged.api.types import PluginCommandSource
 from mcdreforged.api.all import new_thread
 import time
 import os
+import shutil
+
 import minecraft_data_api as api
 
 from . import config
@@ -28,8 +30,7 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
     # 先检测是不是玩家调用的
     if source.is_player == False:
         config.psi.logger.warn(
-            config.psi.rtr("mms.warn.sync.call_from_other",config.get("command"))
-        )
+            config.psi.rtr("mms.warn.sync.call_from_other",config.get("command")))
         return
 
     global aborted,processing
@@ -69,12 +70,12 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
     return
 
 # 你可以理解为 copy
-def sync_single(src:str , dst : str):
+def sync_single(src:str , dst : str)->bool:
     if config.file_exist(src)== False:
         return
     else:
         # 开始备份
-        pass
+        shutil.copyfile(src,dst)
     
 def sync(src:list[str],dst:list[str]):
     # 先关闭服务器
@@ -84,9 +85,20 @@ def sync(src:list[str],dst:list[str]):
             config.psi.logger.error(config.psi.rtr("mms.error.sync.stop_server_fail"))
             config.psi.restart()
             return
-    for s,d in zip(src,dst):
-        sync_single(s,d)
-    
+    config.psi.wait_until_stop()
+    try:
+        # 复制文件
+        for s,d in zip(src,dst):
+            sync_single(s,d)
+    except Exception as e:
+        # 这里备份失败了
+        config.psi.logger.error(config.psi.rtr("mms.error.sync.copy_file_fail"),e)
+    finally:
+        # 启动服务器
+        config.psi.start()
+    # 同步完成
+    return
+
 # 中止同步
 def sync_abort():
     global aborted,processing

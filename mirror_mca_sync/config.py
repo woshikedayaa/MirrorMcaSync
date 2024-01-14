@@ -35,9 +35,9 @@ def init_config(p:PluginServerInterface):
         else:
             # 直接读取配置文件
             cfg.read_file(consts["config.path"])
-    except:
+    except Exception as e:
         # 遇到异常
-        psi.logger.error(psi.rtr("mms.error.config.file_read_error"))
+        psi.logger.error(psi.rtr("mms.error.config.file_read_error"),e)
         # 使用默认的配置
         tempc = configparser.ConfigParser()
         tempc.read_dict(default_config)

@@ -2,6 +2,7 @@ mms:
  error:
   config:
    file_read_error: "error when read config file,plugin will use default config"
+   copy_file_fail: "error when copy file from src to dst"
   sync:
    stop_server_fail: "stop server fail! server will restart"
 
