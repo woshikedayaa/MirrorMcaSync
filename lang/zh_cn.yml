@@ -1,0 +1,23 @@
+mms:
+ error:
+  config:
+   file_read_error: "在读取配置文件的时候发生错误,将使用默认配置"
+
+  sync:
+   stop_server_fail: "停止服务器失败,直接重启服务器"
+   copy_file_fail: "当复制文件的时候发生错误,服务器将直接重启"
+
+ info:
+  config:
+   file_not_exist: "配置文件不存在,将使用默认配置文件"
+  sync:
+   start: "服务器将在 {} 秒后关闭来同步,使用 <{} abort> 来中止"
+   copy: "开始复制文件"
+   copy_info: "复制文件 src={},dst={}"
+
+ warn:
+  sync:
+   repeat: "已经有一个同步任务在执行了 输入 <{} abort>来中止这个同步任务"
+   call_from_other: "<{} or {} abort> 必须由玩家调用"
+   
+  

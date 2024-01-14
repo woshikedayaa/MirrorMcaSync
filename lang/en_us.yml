@@ -2,15 +2,18 @@ mms:
  error:
   config:
    file_read_error: "error when read config file,plugin will use default config"
-   copy_file_fail: "error when copy file from src to dst"
+   
   sync:
    stop_server_fail: "stop server fail! server will restart"
+   copy_file_fail: "error when copy file from src to dst"
 
  info:
   config:
    file_not_exist: "config file not exist,plugin will create and use default config"
   sync:
    start: "sync will start after {} seconds,input <{} abort> to stop it"
+   copy: "start to copy files"
+   copy_info: "copy_file src={},dst={}"
 
  warn:
   sync:

@@ -67,10 +67,13 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
     # 所以解决方案就是 复制玩家周围的文件 大概 3x3 的mca 以玩家为中心
     #sync(src_path,dst_path) -> sync_single
     sync(src_path,dst_path)
+    processing=False
+    aborted=False
     return
 
 # 你可以理解为 copy
-def sync_single(src:str , dst : str)->bool:
+def sync_single(src:str , dst : str):
+    config.psi.logger.info(config.psi.rtr("mms.info.sync.copy_file",src,dst))
     if config.file_exist(src)== False:
         return
     else:
@@ -88,6 +91,7 @@ def sync(src:list[str],dst:list[str]):
     config.psi.wait_until_stop()
     try:
         # 复制文件
+        config.psi.logger.info(config.psi.rtr("mms.info.sync.copy"))
         for s,d in zip(src,dst):
             sync_single(s,d)
     except Exception as e:
@@ -109,12 +113,17 @@ def sync_abort():
 # 构建一个列表 返回的是要 copy 的文件
 def build_file_list(pre:str,centerx:int,centerz:int,dim:int)->list[str]:
     res = []
-    div = ["region",os.path.join("DIM1","region"),os.path.join("DIM-1","region")]
+    # 主世界 地狱 末地
+    div = {
+        "minecraft:overworld":"region",
+        "minecraft:the_nether":os.path.join("DIM-1","region"),
+        "minecraft:the_end":os.path.join("DIM1","region")
+    }
     # 构建文件
 
     for i in range(-1,2):
        for j in range(-1,2):
-            mca_name = ".".join("r",str(centerx+i),str(centerz+j),"mca")
+            mca_name = ".".join(["r",str(centerx+i),str(centerz+j),"mca"])
             target = os.path.join(pre,div[dim],mca_name)
             res.append(target)
     return res
