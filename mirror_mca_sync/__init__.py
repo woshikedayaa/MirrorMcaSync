@@ -30,7 +30,7 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
     # 先检测是不是玩家调用的
     if source.is_player == False:
         config.psi.logger.warn(
-            config.psi.rtr("mms.warn.sync.call_from_other",config.get("command"),config.get("command")))
+            config.psi.rtr("mms.warn.sync.call_from_other",config.get("command")))
         return
 
     global aborted,processing
@@ -38,6 +38,12 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
         config.psi.say(config.psi.rtr("mms.warn.sync.repeat",config.get("command")))
         return
     # 没有正在处理的 创建一个处理的
+    # 获取玩家所在mca文件位置
+    name = source.player
+    pos = api.get_player_coordinate(name)
+    mx = int(pos.x//16//32)
+    mz = int(pos.z//16//32)
+    dim = api.get_player_info(name,"Dimension")
     # 给玩家时间等待
     processing=True
     wt = int(config.get("waitTime"))
@@ -49,12 +55,6 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
         time.sleep(1)
         config.psi.say(config.psi.rtr("mms.info.sync.start",wt-i,config.get("command")))
 
-    # 获取玩家所在mca文件位置
-    name = source.player
-    pos = api.get_player_coordinate(name)
-    mx = int(pos.x//16//32)
-    mz = int(pos.z//16//32)
-    dim = api.get_player_info(name,"Dimension")
     # 等待时间完了 开始执行备份
     # 构建源文件目录(生存)
     src_path = build_file_list(config.get("from"),mx,mz,dim)
@@ -72,7 +72,7 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
     dst_path.append(os.path.join(config.get("to"),"poi"))
     dst_path.append(os.path.join(config.get("to"),"data"))
     dst_path.append(os.path.join(config.get("to"),"level.dat"))
-    dst_path.append(os.path.join(config.get("to"),"statsdst"))
+    dst_path.append(os.path.join(config.get("to"),"stats"))
     # 同步
     # 2024-1-14 这里有个极端情况
     # 就是玩家刚好在边界 然后就会复制一个文件 
@@ -93,6 +93,7 @@ def sync_single(src:str , dst : str):
         # 开始备份
         # 处理文件夹
         if os.path.isdir(src):
+            shutil.rmtree(dst)
             shutil.copytree(src,dst)
             return
         shutil.copyfile(src,dst)
@@ -113,7 +114,7 @@ def sync(src:list[str],dst:list[str]):
             sync_single(s,d)    
     except Exception as e:
         # 这里备份失败了
-        config.psi.logger.error(config.psi.rtr("mms.error.sync.copy_file_fail"),e)
+        config.psi.logger.error(config.psi.rtr("mms.error.sync.copy_file_fail"))
     finally:
         # 启动服务器
         config.psi.start()

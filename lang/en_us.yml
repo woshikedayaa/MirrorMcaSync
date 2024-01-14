@@ -18,6 +18,6 @@ mms:
  warn:
   sync:
    repeat: "there are already have a sync task,input <{} abort>to stop it"
-   call_from_other: "<{} or {} abort> must call by player"
+   call_from_other: "<{}> must called by player"
    
   

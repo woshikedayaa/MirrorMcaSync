@@ -18,6 +18,6 @@ mms:
  warn:
   sync:
    repeat: "已经有一个同步任务在执行了 输入 <{} abort>来中止这个同步任务"
-   call_from_other: "<{} or {} abort> 必须由玩家调用"
+   call_from_other: "<{}> 必须由玩家调用"
    
   
