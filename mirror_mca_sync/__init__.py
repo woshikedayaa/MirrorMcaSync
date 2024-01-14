@@ -30,12 +30,12 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
     # 先检测是不是玩家调用的
     if source.is_player == False:
         config.psi.logger.warn(
-            config.psi.rtr("mms.warn.sync.call_from_other",config.get("command")))
+            config.psi.rtr("mms.warn.sync.call_from_other",config.get("command"),config.get("command")))
         return
 
     global aborted,processing
     if processing:
-        config.psi.say(config.psi.rtr("mms.warn.sync.repeat"))
+        config.psi.say(config.psi.rtr("mms.warn.sync.repeat",config.get("command")))
         return
     # 没有正在处理的 创建一个处理的
     # 给玩家时间等待
@@ -47,7 +47,7 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
             aborted=False
             return
         time.sleep(1)
-        config.psi.say(config.psi.rtr("mms.info.sync.start",wt-i))
+        config.psi.say(config.psi.rtr("mms.info.sync.start",wt-i,config.get("command")))
 
     # 获取玩家所在mca文件位置
     name = source.player
