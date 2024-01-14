@@ -52,14 +52,27 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
     # 获取玩家所在mca文件位置
     name = source.player
     pos = api.get_player_coordinate(name)
-    mx = pos.x//16//32
-    mz = pos.z//16//32
+    mx = int(pos.x//16//32)
+    mz = int(pos.z//16//32)
     dim = api.get_player_info(name,"Dimension")
     # 等待时间完了 开始执行备份
     # 构建源文件目录(生存)
     src_path = build_file_list(config.get("from"),mx,mz,dim)
+    # 同步其他的
+    src_path.append(os.path.join(config.get("from"),"entities"))
+    src_path.append(os.path.join(config.get("from"),"playerdata"))
+    src_path.append(os.path.join(config.get("from"),"poi"))
+    src_path.append(os.path.join(config.get("from"),"data"))
+    src_path.append(os.path.join(config.get("from"),"level.dat"))
+    src_path.append(os.path.join(config.get("from"),"stats"))
     # 构建目标目录(镜像)
     dst_path = build_file_list(config.get("to"),mx,mz,dim)
+    dst_path.append(os.path.join(config.get("to"),"entities"))
+    dst_path.append(os.path.join(config.get("to"),"playerdata"))
+    dst_path.append(os.path.join(config.get("to"),"poi"))
+    dst_path.append(os.path.join(config.get("to"),"data"))
+    dst_path.append(os.path.join(config.get("to"),"level.dat"))
+    dst_path.append(os.path.join(config.get("to"),"statsdst"))
     # 同步
     # 2024-1-14 这里有个极端情况
     # 就是玩家刚好在边界 然后就会复制一个文件 
@@ -73,11 +86,15 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
 
 # 你可以理解为 copy
 def sync_single(src:str , dst : str):
-    config.psi.logger.info(config.psi.rtr("mms.info.sync.copy_file",src,dst))
+    config.psi.logger.info(config.psi.rtr("mms.info.sync.copy_info",src,dst))
     if config.file_exist(src)== False:
         return
     else:
         # 开始备份
+        # 处理文件夹
+        if os.path.isdir(src):
+            shutil.copytree(src,dst)
+            return
         shutil.copyfile(src,dst)
     
 def sync(src:list[str],dst:list[str]):
@@ -90,10 +107,10 @@ def sync(src:list[str],dst:list[str]):
             return
     config.psi.wait_until_stop()
     try:
-        # 复制文件
+        # 复制文件 关键部分
         config.psi.logger.info(config.psi.rtr("mms.info.sync.copy"))
         for s,d in zip(src,dst):
-            sync_single(s,d)
+            sync_single(s,d)    
     except Exception as e:
         # 这里备份失败了
         config.psi.logger.error(config.psi.rtr("mms.error.sync.copy_file_fail"),e)
@@ -120,7 +137,6 @@ def build_file_list(pre:str,centerx:int,centerz:int,dim:int)->list[str]:
         "minecraft:the_end":os.path.join("DIM1","region")
     }
     # 构建文件
-
     for i in range(-1,2):
        for j in range(-1,2):
             mca_name = ".".join(["r",str(centerx+i),str(centerz+j),"mca"])

@@ -6,6 +6,7 @@
     "author": "woshikedayaa",
     "link": "https://github.com/woshikedayaa/MirrorMcaSync",
     "dependencies": {
-       "mcdreforged": ">=2.6"
+       "mcdreforged": ">=2.6",
+       "minecraft_data_api":"*"
     }
 }
