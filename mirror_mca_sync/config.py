@@ -23,6 +23,7 @@ def init_config(p:PluginServerInterface):
     cfg = configparser.ConfigParser()
     try:
         if file_exist(consts["config.path"]) == False:
+            psi.logger.info(psi.tr("mms.info.config.file_not_exist"))
             # 先读取默认配置文件
             cfg.read_dict(default_config)
             # 创建文件
@@ -33,7 +34,8 @@ def init_config(p:PluginServerInterface):
             # 直接读取配置文件
             cfg.read_file(consts["config.path"])
     except:
-        psi.logger.error("error when read config,will use default")
+        # 遇到异常
+        psi.logger.error(psi.rtr("mms.error.config.file_read_error"))
         tempc = configparser.ConfigParser()
         tempc.read_dict(default_config)
         global_config = tempc

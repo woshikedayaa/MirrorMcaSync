@@ -1,0 +1,8 @@
+mms:
+ error:
+  config:
+   file_read_error: "error when read config file,plugin will use default config"
+ info:
+  config:
+   file_not_exist: "config file not exist,plugin will create and use default config"
+  
