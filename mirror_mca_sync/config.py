@@ -1,5 +1,6 @@
 import os # 用来 生成文件 读文件
 import configparser
+import json
 from mcdreforged.api.types import PluginServerInterface
 
 default_config = {
@@ -11,43 +12,36 @@ default_config = {
 
 psi:PluginServerInterface = None
 
-global_config:configparser.ConfigParser
+global_config = default_config
 
 consts = {
     "config.path":"config/mirror_mca_sync.json",
-    "config.default":default_config,
 }
 
 def init_config(p:PluginServerInterface):
-    global psi,global_config
+    global psi,global_config,default_config
     psi = p
-    cfg = configparser.ConfigParser()
     try:
         # 判断配置文件是否存在
         if file_exist(consts["config.path"]) == False:
             psi.logger.info(psi.tr("mms.info.config.file_not_exist"))
-            # 先读取默认配置文件
-            cfg.read_dict(default_config)
             # 创建文件
             with open(consts["config.path"],"w") as file:
                 # 写入默认配置文件
-                cfg.write(file)
+                json.dump(default_config,file,indent=4)
         else:
             # 直接读取配置文件
-            cfg.read_file(consts["config.path"])
+            with open(consts["config.path"],"r") as file:
+                global_config = json.load(file)
     except Exception as e:
         # 遇到异常
         psi.logger.error(psi.rtr("mms.error.config.file_read_error"),e)
         # 使用默认的配置
-        tempc = configparser.ConfigParser()
-        tempc.read_dict(default_config)
-        global_config = tempc
-    else:
-        global_config = cfg
+        global_config = default_config
     return
 
 def file_exist(path:str)->bool:
-    return os.path.exists(path=path)
+    return os.path.exists(path)
 
 def get(key:str)->str:
-    return global_config.get(key)
+    return global_config[key]
