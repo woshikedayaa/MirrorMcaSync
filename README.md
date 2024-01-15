@@ -16,8 +16,8 @@ MirrorMcaSync 是一个 [Mcdreforged](https://github.com/Fallen-Breath/MCDReforg
 再从生存服复制mca文件 同步至镜像服 最后重启  
 
 # 配置
-```json
-# config/mirror_mca_sync.json
+```js
+// config/mirror_mca_sync.json
 {
     "from":"survival/world", // mca文件来源 通常是生存服
     "to":"mirror/world", // mca文件目标 通常是镜像服
