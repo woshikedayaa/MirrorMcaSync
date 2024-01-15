@@ -19,6 +19,8 @@ def on_load(now:PluginServerInterface,old):
     # 注册指令
     registry_command(now)
 
+    now.register_help_message(config.get("command"),"同步镜像服")
+
 def registry_command(psi:PluginServerInterface):
     b = SimpleCommandBuilder()
     b.command(config.get("command"),sync_pre)
