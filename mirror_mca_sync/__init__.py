@@ -60,24 +60,20 @@ def sync_pre(source:PluginCommandSource,ctx:dict):
     src_path = build_file_list(config.get("from"),mx,mz,dim)
     # 同步其他的
     src_path.append(os.path.join(config.get("from"),"entities"))
-    src_path.append(os.path.join(config.get("from"),"playerdata"))
     src_path.append(os.path.join(config.get("from"),"poi"))
     src_path.append(os.path.join(config.get("from"),"data"))
     src_path.append(os.path.join(config.get("from"),"level.dat"))
-    src_path.append(os.path.join(config.get("from"),"stats"))
     # 构建目标目录(镜像)
     dst_path = build_file_list(config.get("to"),mx,mz,dim)
     dst_path.append(os.path.join(config.get("to"),"entities"))
-    dst_path.append(os.path.join(config.get("to"),"playerdata"))
     dst_path.append(os.path.join(config.get("to"),"poi"))
     dst_path.append(os.path.join(config.get("to"),"data"))
     dst_path.append(os.path.join(config.get("to"),"level.dat"))
-    dst_path.append(os.path.join(config.get("to"),"stats"))
     # 同步
     # 2024-1-14 这里有个极端情况
     # 就是玩家刚好在边界 然后就会复制一个文件 
     # 然后只复制玩家的位置的 导致有很大的边界感
-    # 所以解决方案就是 复制玩家周围的文件 大概 3x3 的mca 以玩家为中心
+    # 所以解决方案就是 复制玩家周围的文件 大概 3x3 的mca`` 以玩家为中心
     #sync(src_path,dst_path) -> sync_single
     sync(src_path,dst_path)
     processing=False
